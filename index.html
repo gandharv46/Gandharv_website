@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Premium Presentation</title>
+    <style>
+        /* 1. Global Reset & Performance */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevent native scrollbars from clashing */
+            background-color: #000; /* Dark canvas for a luxury feel */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* 2. Fade-In Entrance Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 3. The Container */
+        .viewport-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh; /* Dynamic viewport for mobile chrome */
+            animation: fadeIn 1.2s ease-out forwards;
+            background: #000;
+        }
+
+        /* 4. The PDF Host */
+        /* #toolbar=0 hides Adobe/Chrome controls to keep it looking like a website */
+        #content-host {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* 5. Minimalist Mobile Overrides */
+        @media (max-width: 768px) {
+            .viewport-wrapper {
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="viewport-wrapper">
+        <object 
+            id="content-host"
+            data="your-design.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH" 
+            type="application/pdf">
+            <div style="color: white; text-align: center; padding-top: 20vh;">
+                <p>Loading Experience...</p>
+                <a href="your-design.pdf" style="color: #999; text-decoration: none; font-size: 14px;">Click here if not redirected</a>
+            </div>
+        </object>
+    </div>
+
+</body>
+</html>
