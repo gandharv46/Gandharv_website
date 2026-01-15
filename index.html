@@ -1,471 +1,177 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Gandharv Portfolio</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PDF Viewer</title>
 
-  <style>
-    :root{
-      --accent:#60AAD8;
-      --bg:#05070a;
-      --glass:rgba(255,255,255,0.08);
-      --border:rgba(255,255,255,0.12);
-      --muted:rgba(255,255,255,0.68);
-      --shadow:0 24px 80px rgba(0,0,0,0.65);
-      --radius:22px;
-    }
+<style>
+  :root{
+    --bg:#0b0b0c;
+    --card:#121215;
+    --stroke:rgba(255,255,255,.12);
+    --text:rgba(255,255,255,.9);
+    --muted:rgba(255,255,255,.55);
+  }
 
-    *{ box-sizing:border-box; }
-    html, body { height:100%; }
-    body{
-      margin:0;
-      background:
-        radial-gradient(1100px 700px at 18% 8%, rgba(96,170,216,0.20), transparent 60%),
-        radial-gradient(900px 600px at 85% 20%, rgba(255,255,255,0.08), transparent 60%),
-        var(--bg);
-      color:#fff;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-      -webkit-font-smoothing:antialiased;
-      overflow-x:hidden;
-    }
+  html,body{
+    margin:0;
+    height:100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, Inter, Segoe UI, Roboto, Helvetica, Arial;
+    -webkit-overflow-scrolling: touch;
+  }
 
-    /* subtle premium grain */
-    .grain{
-      position:fixed; inset:0;
-      pointer-events:none;
-      opacity:.08;
-      mix-blend-mode:overlay;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
-      transform:scale(1.2);
-      z-index:0;
-    }
+  .container{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 22px 14px 90px;
+  }
 
-    /* top bar */
-    .topbar{
-      position:sticky; top:0; z-index:30;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 16px;
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
-      background:linear-gradient(to bottom, rgba(0,0,0,.74), rgba(0,0,0,.16));
-      border-bottom:1px solid rgba(255,255,255,0.06);
-    }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      min-width:0;
-    }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      background:var(--accent);
-      box-shadow:0 0 18px rgba(96,170,216,.65);
-      flex:0 0 auto;
-    }
-    .title{
-      font-weight:800;
-      letter-spacing:.2px;
-      font-size:14px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width:56vw;
-    }
-    .sub{
-      font-size:12px; color:var(--muted);
-      margin-top:2px;
-    }
-    .right{
-      display:flex; align-items:center; gap:10px;
-      flex:0 0 auto;
-    }
-    .pill{
-      border:1px solid rgba(255,255,255,0.12);
-      background:linear-gradient(180deg, var(--glass), rgba(255,255,255,0.04));
-      padding:9px 11px;
-      border-radius:999px;
-      font-size:12px;
-      color:rgba(255,255,255,0.80);
-      font-weight:800;
-      letter-spacing:.2px;
-      user-select:none;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .btn{
-      border:1px solid rgba(255,255,255,0.14);
-      background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-      color:#fff;
-      padding:9px 11px;
-      border-radius:14px;
-      font-size:12px;
-      font-weight:900;
-      cursor:pointer;
-      transition:transform .12s ease, opacity .12s ease, border-color .12s ease;
-      text-decoration:none;
-      display:inline-flex; align-items:center; gap:8px;
-    }
-    .btn:hover{ transform:translateY(-1px); border-color:rgba(255,255,255,0.22); }
-    .btn:active{ transform:translateY(0); opacity:.92; }
+  .page-wrap{
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border: 1px solid var(--stroke);
+    border-radius: 16px;
+    padding: 10px;
+    margin-bottom: 18px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.35);
+  }
 
-    /* container */
-    #pages{
-      position:relative;
-      z-index:5;
-      width:min(1040px, 92vw);
-      margin:14px auto 80px;
-    }
+  canvas{
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    background: var(--card);
+  }
 
-    /* Each PDF page becomes a website "section" */
-    .page{
-      position:relative;
-      margin:18px 0;
-      border-radius:var(--radius);
-      border:1px solid rgba(255,255,255,0.10);
-      background:rgba(0,0,0,0.30);
-      box-shadow:0 18px 55px rgba(0,0,0,0.55);
-      overflow:hidden;
+  .hint{
+    text-align:center;
+    font-size:12px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
 
-      /* base reveal */
-      opacity:0;
-      transform:translateY(18px) scale(0.985);
-      filter:blur(7px);
-      transition:
-        opacity 560ms cubic-bezier(.2,.9,.2,1),
-        transform 560ms cubic-bezier(.2,.9,.2,1),
-        filter 560ms cubic-bezier(.2,.9,.2,1);
-      will-change:opacity, transform, filter;
-    }
-    .page.is-visible{
-      opacity:1;
-      transform:translateY(0) scale(1);
-      filter:blur(0);
-    }
+  /* MacBook-style bar */
+  .macbar{
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(720px, calc(100% - 20px));
+    height: 42px;
+    border-radius: 18px;
+    background: rgba(20,20,24,.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,.15);
+    box-shadow: 0 12px 30px rgba(0,0,0,.4);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-size:12px;
+    color:rgba(255,255,255,.75);
+    pointer-events:none;
+  }
 
-    /* "web scroll" movement while scrolling: subtle depth */
-    .page .inner{
-      will-change: transform;
-      transform: translateY(var(--parallax, 0px));
-      transition: transform 80ms linear;
-    }
-
-    /* sheen sweep when it appears */
-    .page::after{
-      content:"";
-      position:absolute;
-      inset:-30% -60%;
-      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.11), transparent);
-      transform:translateX(-120%);
-      opacity:0;
-      pointer-events:none;
-    }
-    .page.is-visible::after{
-      animation:shine 950ms ease-out 1;
-    }
-    @keyframes shine{
-      0%{ transform:translateX(-120%); opacity:0; }
-      18%{ opacity:1; }
-      100%{ transform:translateX(120%); opacity:0; }
-    }
-
-    .page-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:12px 14px;
-      border-bottom:1px solid rgba(255,255,255,0.06);
-      background:linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.10));
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    .page-label{
-      font-size:12px;
-      color:rgba(255,255,255,0.74);
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .page-meta{
-      font-size:12px;
-      color:rgba(255,255,255,0.55);
-      font-weight:800;
-    }
-
-    canvas{
-      display:block;
-      width:100%;
-      height:auto;
-      background:#0b0d10;
-    }
-
-    /* Loading overlay */
-    #loading{
-      position:fixed;
-      inset:0;
-      z-index:60;
-      display:grid;
-      place-items:center;
-      background:rgba(0,0,0,0.62);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
-    }
-    #loading.hidden{ display:none; }
-    .loading-card{
-      width:min(560px, 90vw);
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,0.12);
-      background:linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04));
-      box-shadow:0 24px 80px rgba(0,0,0,0.65);
-      padding:16px 18px;
-      position:relative;
-      overflow:hidden;
-    }
-    .loading-card::after{
-      content:"";
-      position:absolute;
-      inset:-20%;
-      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
-      animation:shine 1.2s ease-in-out infinite;
-      transform:translateX(-120%);
-    }
-    .loading-title{
-      position:relative;
-      font-size:13px;
-      font-weight:1000;
-      letter-spacing:.2px;
-      margin-bottom:6px;
-    }
-    .loading-sub{
-      position:relative;
-      font-size:12px;
-      color:rgba(255,255,255,0.72);
-      line-height:1.45;
-    }
-
-    @media (max-width: 768px){
-      #pages{ width:min(980px, 94vw); }
-      .page{ margin:14px 0; border-radius:18px; }
-      .btn{ padding:8px 10px; border-radius:12px; }
-      .pill{ padding:8px 10px; }
-      .title{ max-width:46vw; }
-    }
-  </style>
+  .dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:rgba(255,255,255,.25);
+  }
+</style>
 </head>
 
 <body>
-  <div class="grain"></div>
 
-  <div class="topbar">
-    <div class="brand">
-      <span class="dot"></span>
-      <div style="min-width:0;">
-        <div class="title" id="docTitle">Gandharv Portfolio</div>
-        <div class="sub" id="docMeta">Hosting <b>mygd.pdf</b> as a scrolling website…</div>
-      </div>
-    </div>
+<div class="container" id="container">
+  <div class="hint">Scroll • Pages load smoothly</div>
+</div>
 
-    <div class="right">
-      <div class="pill" id="pagePill">Page 1</div>
-      <a class="btn" href="./mygd.pdf" target="_blank" rel="noopener">Open PDF</a>
-    </div>
-  </div>
+<div class="macbar">
+  <span class="dot"></span>
+  <span>All rights reserved — Gandharv</span>
+  <span class="dot"></span>
+</div>
 
-  <div id="pages"></div>
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+<script>
+  const PDF_URL = "./mygd.pdf";
 
-  <div id="loading">
-    <div class="loading-card">
-      <div class="loading-title">✨ Building the portfolio website…</div>
-      <div class="loading-sub">Turning each PDF page into a web section with smooth scroll motion.</div>
-    </div>
-  </div>
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
 
-  <!-- PDF.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+  const container = document.getElementById("container");
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-  <script>
-    // ✅ PDF in repo root
-    const PDF_URL = "./mygd.pdf";
+  let pdfDoc = null;
+  let rendered = new Set();
 
-    // PDF.js worker
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
+  function createPageShell(pageNum){
+    const wrap = document.createElement("div");
+    wrap.className = "page-wrap";
+    wrap.dataset.page = pageNum;
+    wrap.style.minHeight = "300px";
+    return wrap;
+  }
 
-    const pagesEl  = document.getElementById("pages");
-    const loading  = document.getElementById("loading");
-    const pagePill = document.getElementById("pagePill");
-    const docMeta  = document.getElementById("docMeta");
+  async function renderPage(pageNum){
+    if (rendered.has(pageNum)) return;
+    rendered.add(pageNum);
 
-    const MAX_SCALE_DESKTOP = 1.9; // quality
-    const MAX_SCALE_MOBILE  = 1.35;
-    const VIS_THRESHOLD = 0.35;
+    const page = await pdfDoc.getPage(pageNum);
+    const viewport = page.getViewport({ scale: 1 });
 
-    const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+    const scale = (container.clientWidth - 20) / viewport.width;
+    const scaledViewport = page.getViewport({ scale });
 
-    // IntersectionObserver: reveal + update "Page X" pill
-    const io = new IntersectionObserver((entries) => {
-      let best = null;
-      for (const e of entries){
-        if (!e.isIntersecting) continue;
-        if (!best || e.intersectionRatio > best.intersectionRatio) best = e;
-        e.target.classList.add("is-visible");
-      }
-      if (best){
-        const p = best.target.getAttribute("data-page");
-        pagePill.textContent = `Page ${p}`;
-      }
-    }, { threshold: [0.15, 0.25, 0.35, 0.5, 0.7] });
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
 
-    async function renderPage(pdf, pageNumber, scale){
-      const page = await pdf.getPage(pageNumber);
-      const viewport = page.getViewport({ scale });
+    canvas.width = Math.floor(scaledViewport.width * dpr);
+    canvas.height = Math.floor(scaledViewport.height * dpr);
+    canvas.style.width = scaledViewport.width + "px";
+    canvas.style.height = scaledViewport.height + "px";
 
-      const section = document.createElement("section");
-      section.className = "page";
-      section.setAttribute("data-page", String(pageNumber));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const header = document.createElement("div");
-      header.className = "page-top";
+    await page.render({
+      canvasContext: ctx,
+      viewport: scaledViewport
+    }).promise;
 
-      const left = document.createElement("div");
-      left.className = "page-label";
-      left.textContent = `Section ${pageNumber}`;
+    const shell = container.querySelector(`[data-page="${pageNum}"]`);
+    shell.innerHTML = "";
+    shell.appendChild(canvas);
+  }
 
-      const right = document.createElement("div");
-      right.className = "page-meta";
-      right.textContent = `${Math.round(viewport.width)}×${Math.round(viewport.height)}`;
-
-      header.appendChild(left);
-      header.appendChild(right);
-
-      const inner = document.createElement("div");
-      inner.className = "inner";
-
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d", { alpha: false });
-
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width  = Math.floor(viewport.width * dpr);
-      canvas.height = Math.floor(viewport.height * dpr);
-      canvas.style.width  = `${Math.floor(viewport.width)}px`;
-      canvas.style.height = `${Math.floor(viewport.height)}px`;
-
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      inner.appendChild(canvas);
-      section.appendChild(header);
-      section.appendChild(inner);
-      pagesEl.appendChild(section);
-
-      io.observe(section);
-
-      await page.render({ canvasContext: ctx, viewport }).promise;
-    }
-
-    async function buildWebsiteFromPDF(){
-      try{
-        const pdf = await pdfjsLib.getDocument(PDF_URL).promise;
-        const scale = isMobile() ? MAX_SCALE_MOBILE : MAX_SCALE_DESKTOP;
-
-        docMeta.innerHTML = `Hosting <b>mygd.pdf</b> as a website — ${pdf.numPages} sections.`;
-
-        for (let i = 1; i <= pdf.numPages; i++){
-          await renderPage(pdf, i, scale);
-          await new Promise(r => requestAnimationFrame(() => r()));
+  function observePages(){
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const pageNum = Number(entry.target.dataset.page);
+          renderPage(pageNum);
         }
-
-        loading.classList.add("hidden");
-        pagePill.textContent = "Page 1";
-      } catch (err){
-        // ✅ No errors shown. Premium holding state only.
-        loading.classList.add("hidden");
-
-        pagesEl.innerHTML = `
-          <section style="
-            margin:40px auto;
-            width:min(920px, 92vw);
-            border-radius:24px;
-            border:1px solid rgba(255,255,255,0.12);
-            background:
-              radial-gradient(700px 300px at 20% 15%, rgba(96,170,216,0.18), transparent 60%),
-              radial-gradient(700px 300px at 85% 0%, rgba(255,255,255,0.10), transparent 60%),
-              rgba(0,0,0,0.35);
-            box-shadow:0 28px 90px rgba(0,0,0,0.7);
-            padding:28px 26px 30px;
-            text-align:center;
-            color:rgba(255,255,255,0.88);
-          ">
-            <div style="
-              width:14px;
-              height:14px;
-              border-radius:999px;
-              margin:0 auto 14px;
-              background:#60AAD8;
-              box-shadow:0 0 22px rgba(96,170,216,0.7);
-            "></div>
-
-            <h1 style="
-              margin:0 0 10px;
-              font-size:18px;
-              letter-spacing:.3px;
-              font-weight:900;
-            ">
-              Website Under Renovation
-            </h1>
-
-            <p style="
-              margin:0 auto;
-              max-width:52ch;
-              font-size:13px;
-              line-height:1.55;
-              color:rgba(255,255,255,0.70);
-            ">
-              We’re currently refining this experience to make it exceptional.
-              Please check back soon.
-            </p>
-
-            <div style="
-              margin-top:18px;
-              font-size:12px;
-              letter-spacing:.3px;
-              color:rgba(255,255,255,0.45);
-              font-weight:800;
-            ">
-              Gandharv Portfolio
-            </div>
-          </section>
-        `;
-      }
-    }
-
-    // Scroll-based “web motion”: mild parallax per section
-    function applyScrollMotion(){
-      const vh = window.innerHeight || 800;
-      const pages = document.querySelectorAll(".page");
-      for (const page of pages){
-        const rect = page.getBoundingClientRect();
-        const center = rect.top + rect.height/2;
-        const delta = (center - vh/2) / (vh/2);  // -1..1
-        const shift = Math.max(-18, Math.min(18, -delta * 14)); // px
-        page.style.setProperty("--parallax", `${shift}px`);
-      }
-    }
-
-    let ticking = false;
-    window.addEventListener("scroll", () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        applyScrollMotion();
-        ticking = false;
       });
-    }, { passive: true });
+    }, { rootMargin: "400px" });
 
-    window.addEventListener("resize", () => {
-      applyScrollMotion();
-    });
+    document.querySelectorAll(".page-wrap").forEach(p => observer.observe(p));
+  }
 
-    // GO
-    buildWebsiteFromPDF().then(() => {
-      setTimeout(applyScrollMotion, 120);
-    });
-  </script>
+  (async function init(){
+    pdfDoc = await pdfjsLib.getDocument(PDF_URL).promise;
+
+    for (let i = 1; i <= pdfDoc.numPages; i++) {
+      container.appendChild(createPageShell(i));
+    }
+
+    observePages();
+  })();
+</script>
+
 </body>
 </html>
