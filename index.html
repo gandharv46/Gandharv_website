@@ -1,75 +1,185 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Premium Presentation</title>
-    <style>
-        /* 1. Global Reset & Performance */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-font-smoothing: antialiased;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Premium Presentation</title>
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden; /* Prevent native scrollbars from clashing */
-            background-color: #000; /* Dark canvas for a luxury feel */
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
 
-        /* 2. Fade-In Entrance Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(96,170,216,0.18), transparent 55%),
+        radial-gradient(1200px 700px at 90% 30%, rgba(255,255,255,0.08), transparent 55%),
+        #000;
+      color: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        /* 3. The Container */
-        .viewport-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh; /* Dynamic viewport for mobile chrome */
-            animation: fadeIn 1.2s ease-out forwards;
-            background: #000;
-        }
+    :root {
+      --accent: #60AAD8;
+      --glass: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.14);
+      --shadow: 0 22px 70px rgba(0,0,0,0.6);
+    }
 
-        /* 4. The PDF Host */
-        /* #toolbar=0 hides Adobe/Chrome controls to keep it looking like a website */
-        #content-host {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
+    /* Grain */
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.08;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+    }
 
-        /* 5. Minimalist Mobile Overrides */
-        @media (max-width: 768px) {
-            .viewport-wrapper {
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-        }
-    </style>
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.99); filter: blur(6px); }
+      to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    .app {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      animation: floatIn 900ms cubic-bezier(.2,.9,.2,1) forwards;
+    }
+
+    /* Header */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.1));
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 18px rgba(96,170,216,0.6);
+    }
+
+    .actions a {
+      text-decoration: none;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--glass), rgba(255,255,255,0.04));
+      transition: transform .15s ease, opacity .15s ease;
+      margin-left: 8px;
+    }
+
+    .actions a:hover { transform: translateY(-1px); opacity: .95; }
+
+    /* Viewer shell */
+    .shell {
+      margin: 14px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.35);
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    /* Loading overlay */
+    .loading {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      backdrop-filter: blur(12px);
+      background: rgba(0,0,0,0.55);
+      z-index: 5;
+      transition: opacity .3s ease;
+    }
+
+    .loading.hidden { opacity: 0; pointer-events: none; }
+
+    .loader {
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
+      font-size: 13px;
+      letter-spacing: .2px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #0b0b0b;
+    }
+
+    @media (max-width: 768px) {
+      .shell { margin: 10px; border-radius: 16px; }
+      .actions a { padding: 8px 10px; }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="grain"></div>
 
-    <div class="viewport-wrapper">
-        <object 
-            id="content-host"
-            data="mygd.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH" 
-            type="application/pdf">
-            <div style="color: white; text-align: center; padding-top: 20vh;">
-                <p>Loading Experience...</p>
-                <a href="your-design.pdf" style="color: #999; text-decoration: none; font-size: 14px;">Click here if not redirected</a>
-            </div>
-        </object>
-    </div>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="dot"></span>
+        Premium Presentation
+      </div>
 
+      <div class="actions">
+        <a href="./mygd.pdf" target="_blank" rel="noopener">Open</a>
+        <a href="./mygd.pdf" download>Download</a>
+      </div>
+    </header>
+
+    <main class="shell">
+      <div class="loading" id="loading">
+        <div class="loader">✨ Loading presentation…</div>
+      </div>
+
+      <iframe
+        id="pdfFrame"
+        src="./mygd.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH"
+        title="PDF Viewer"
+        loading="eager"
+      ></iframe>
+    </main>
+  </div>
+
+  <script>
+    const frame = document.getElementById("pdfFrame");
+    const loading = document.getElementById("loading");
+
+    frame.addEventListener("load", () => {
+      loading.classList.add("hidden");
+    });
+
+    // Fallback: hide loader even if browser blocks inline PDF
+    setTimeout(() => loading.classList.add("hidden"), 2200);
+  </script>
 </body>
 </html>
