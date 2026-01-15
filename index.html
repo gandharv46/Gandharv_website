@@ -21,7 +21,7 @@
     body{
       margin:0;
       background:
-        radial-gradient(1000px 600px at 20% 10%, rgba(96,170,216,0.20), transparent 60%),
+        radial-gradient(1100px 700px at 18% 8%, rgba(96,170,216,0.20), transparent 60%),
         radial-gradient(900px 600px at 85% 20%, rgba(255,255,255,0.08), transparent 60%),
         var(--bg);
       color:#fff;
@@ -43,12 +43,12 @@
 
     /* top bar */
     .topbar{
-      position:sticky; top:0; z-index:20;
+      position:sticky; top:0; z-index:30;
       display:flex; align-items:center; justify-content:space-between;
       padding:14px 16px;
       backdrop-filter:blur(14px);
       -webkit-backdrop-filter:blur(14px);
-      background:linear-gradient(to bottom, rgba(0,0,0,.72), rgba(0,0,0,.15));
+      background:linear-gradient(to bottom, rgba(0,0,0,.74), rgba(0,0,0,.16));
       border-bottom:1px solid rgba(255,255,255,0.06);
     }
     .brand{
@@ -62,118 +62,76 @@
       flex:0 0 auto;
     }
     .title{
-      font-weight:700; letter-spacing:.2px; font-size:14px;
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      font-weight:800;
+      letter-spacing:.2px;
+      font-size:14px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
       max-width:56vw;
     }
     .sub{
       font-size:12px; color:var(--muted);
       margin-top:2px;
     }
-
-    .actions{
-      display:flex; gap:10px; align-items:center;
+    .right{
+      display:flex; align-items:center; gap:10px;
       flex:0 0 auto;
     }
-
-    .btn{
-      border:1px solid var(--border);
+    .pill{
+      border:1px solid rgba(255,255,255,0.12);
       background:linear-gradient(180deg, var(--glass), rgba(255,255,255,0.04));
-      color:#fff;
-      padding:10px 12px;
-      border-radius:14px;
-      font-size:13px;
-      font-weight:700;
-      cursor:pointer;
-      text-decoration:none;
-      transition:transform .12s ease, opacity .12s ease, border-color .12s ease;
+      padding:9px 11px;
+      border-radius:999px;
+      font-size:12px;
+      color:rgba(255,255,255,0.80);
+      font-weight:800;
+      letter-spacing:.2px;
       user-select:none;
       -webkit-tap-highlight-color:transparent;
-      display:inline-flex; gap:8px; align-items:center;
+    }
+    .btn{
+      border:1px solid rgba(255,255,255,0.14);
+      background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      color:#fff;
+      padding:9px 11px;
+      border-radius:14px;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .12s ease, opacity .12s ease, border-color .12s ease;
+      text-decoration:none;
+      display:inline-flex; align-items:center; gap:8px;
     }
     .btn:hover{ transform:translateY(-1px); border-color:rgba(255,255,255,0.22); }
     .btn:active{ transform:translateY(0); opacity:.92; }
-    .btn.secondary{ color:var(--muted); font-weight:700; }
 
-    /* upload card */
-    .hero{
-      position:relative;
-      z-index:5;
-      width:min(980px, 92vw);
-      margin:18px auto 18px;
-      padding:18px;
-      border-radius:var(--radius);
-      border:1px solid rgba(255,255,255,0.12);
-      background:rgba(0,0,0,0.35);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-    .hero::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(700px 260px at 18% 15%, rgba(96,170,216,0.18), transparent 62%),
-        radial-gradient(700px 260px at 82% 0%, rgba(255,255,255,0.10), transparent 62%);
-      pointer-events:none;
-      opacity:.9;
-    }
-    .hero-inner{
-      position:relative;
-      display:flex; gap:14px; align-items:center; justify-content:space-between;
-      flex-wrap:wrap;
-    }
-    .hero h1{
-      margin:0;
-      font-size:16px;
-      letter-spacing:.2px;
-    }
-    .hero p{
-      margin:6px 0 0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
-      max-width:64ch;
-    }
-    input[type="file"]{
-      display:none;
-    }
-    .file-pill{
-      border:1px dashed rgba(255,255,255,0.20);
-      background:rgba(255,255,255,0.04);
-      padding:10px 12px;
-      border-radius:14px;
-      color:rgba(255,255,255,0.80);
-      font-size:12px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width:min(52vw, 420px);
-    }
-
-    /* pages container */
+    /* container */
     #pages{
       position:relative;
       z-index:5;
-      width:min(980px, 92vw);
-      margin:0 auto 80px;
+      width:min(1040px, 92vw);
+      margin:14px auto 80px;
     }
 
-    /* Each PDF page becomes a "section" */
+    /* Each PDF page becomes a website "section" */
     .page{
+      position:relative;
       margin:18px 0;
       border-radius:var(--radius);
       border:1px solid rgba(255,255,255,0.10);
-      background:rgba(0,0,0,0.32);
+      background:rgba(0,0,0,0.30);
       box-shadow:0 18px 55px rgba(0,0,0,0.55);
       overflow:hidden;
 
-      /* animation base state */
+      /* base reveal */
       opacity:0;
       transform:translateY(18px) scale(0.985);
-      filter:blur(6px);
-      transition:opacity 520ms cubic-bezier(.2,.9,.2,1),
-                 transform 520ms cubic-bezier(.2,.9,.2,1),
-                 filter 520ms cubic-bezier(.2,.9,.2,1);
+      filter:blur(7px);
+      transition:
+        opacity 560ms cubic-bezier(.2,.9,.2,1),
+        transform 560ms cubic-bezier(.2,.9,.2,1),
+        filter 560ms cubic-bezier(.2,.9,.2,1);
       will-change:opacity, transform, filter;
     }
     .page.is-visible{
@@ -182,23 +140,29 @@
       filter:blur(0);
     }
 
-    /* subtle "shine" that sweeps when page appears */
+    /* "web scroll" movement while scrolling: subtle depth */
+    .page .inner{
+      will-change: transform;
+      transform: translateY(var(--parallax, 0px));
+      transition: transform 80ms linear;
+    }
+
+    /* sheen sweep when it appears */
     .page::after{
       content:"";
       position:absolute;
       inset:-30% -60%;
-      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.11), transparent);
       transform:translateX(-120%);
       opacity:0;
       pointer-events:none;
     }
     .page.is-visible::after{
-      animation:shine 900ms ease-out 1;
-      opacity:1;
+      animation:shine 950ms ease-out 1;
     }
     @keyframes shine{
       0%{ transform:translateX(-120%); opacity:0; }
-      20%{ opacity:1; }
+      18%{ opacity:1; }
       100%{ transform:translateX(120%); opacity:0; }
     }
 
@@ -215,13 +179,14 @@
     }
     .page-label{
       font-size:12px;
-      color:rgba(255,255,255,0.72);
-      font-weight:700;
+      color:rgba(255,255,255,0.74);
+      font-weight:900;
       letter-spacing:.2px;
     }
     .page-meta{
       font-size:12px;
       color:rgba(255,255,255,0.55);
+      font-weight:800;
     }
 
     canvas{
@@ -231,20 +196,20 @@
       background:#0b0d10;
     }
 
-    /* loading overlay */
+    /* Loading overlay */
     #loading{
       position:fixed;
       inset:0;
-      z-index:50;
-      display:none;
+      z-index:60;
+      display:grid;
       place-items:center;
-      background:rgba(0,0,0,0.6);
+      background:rgba(0,0,0,0.62);
       backdrop-filter:blur(14px);
       -webkit-backdrop-filter:blur(14px);
     }
-    #loading.show{ display:grid; }
+    #loading.hidden{ display:none; }
     .loading-card{
-      width:min(520px, 90vw);
+      width:min(560px, 90vw);
       border-radius:18px;
       border:1px solid rgba(255,255,255,0.12);
       background:linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04));
@@ -264,30 +229,23 @@
     .loading-title{
       position:relative;
       font-size:13px;
-      font-weight:800;
+      font-weight:1000;
       letter-spacing:.2px;
       margin-bottom:6px;
     }
     .loading-sub{
       position:relative;
       font-size:12px;
-      color:rgba(255,255,255,0.70);
+      color:rgba(255,255,255,0.72);
       line-height:1.45;
     }
 
-    /* optional: "snap" feel (like website sections) */
-    .snap #pages{
-      scroll-snap-type:y proximity;
-    }
-    .snap .page{
-      scroll-snap-align:start;
-    }
-
     @media (max-width: 768px){
-      .hero{ margin:12px auto; padding:14px; }
+      #pages{ width:min(980px, 94vw); }
       .page{ margin:14px 0; border-radius:18px; }
-      .btn{ padding:9px 10px; border-radius:12px; }
-      .file-pill{ max-width:72vw; }
+      .btn{ padding:8px 10px; border-radius:12px; }
+      .pill{ padding:8px 10px; }
+      .title{ max-width:46vw; }
     }
   </style>
 </head>
@@ -300,27 +258,13 @@
       <span class="dot"></span>
       <div style="min-width:0;">
         <div class="title" id="docTitle">Gandharv Portfolio</div>
-        <div class="sub" id="docMeta">Upload a PDF — it becomes a scrolling website.</div>
+        <div class="sub" id="docMeta">Hosting <b>mygd.pdf</b> as a scrolling website…</div>
       </div>
     </div>
 
-    <div class="actions">
-      <button class="btn secondary" id="toggleSnap" type="button">Scroll Snap: Off</button>
-      <label class="btn" for="pdfInput">Upload PDF</label>
-      <input id="pdfInput" type="file" accept="application/pdf" />
-    </div>
-  </div>
-
-  <div class="hero">
-    <div class="hero-inner">
-      <div>
-        <h1>Portfolio PDF → Website Experience</h1>
-        <p>
-          Upload a PDF and we render each page as a premium web section with smooth scroll animations.
-          Perfect for a portfolio deck that feels like a site, not a file.
-        </p>
-      </div>
-      <div class="file-pill" id="fileName">No file selected</div>
+    <div class="right">
+      <div class="pill" id="pagePill">Page 1</div>
+      <a class="btn" href="./mygd.pdf" target="_blank" rel="noopener">Open PDF</a>
     </div>
   </div>
 
@@ -328,76 +272,61 @@
 
   <div id="loading">
     <div class="loading-card">
-      <div class="loading-title">✨ Building the website…</div>
-      <div class="loading-sub">Rendering pages and optimizing for smooth scrolling.</div>
+      <div class="loading-title">✨ Building the portfolio website…</div>
+      <div class="loading-sub">Turning each PDF page into a web section with smooth scroll motion.</div>
     </div>
   </div>
 
-  <!-- PDF.js (no build step) -->
+  <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
 
   <script>
-    // --------- Config ----------
-    const MAX_SCALE_DESKTOP = 1.8; // quality
-    const MAX_SCALE_MOBILE  = 1.35;
-    const VISIBILITY_THRESHOLD = 0.35;
+    // ✅ PDF in repo root
+    const PDF_URL = "./mygd.pdf";
 
     // PDF.js worker
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
 
-    const pdfInput = document.getElementById("pdfInput");
     const pagesEl  = document.getElementById("pages");
-    const fileName = document.getElementById("fileName");
-    const docTitle = document.getElementById("docTitle");
-    const docMeta  = document.getElementById("docMeta");
     const loading  = document.getElementById("loading");
+    const pagePill = document.getElementById("pagePill");
+    const docMeta  = document.getElementById("docMeta");
 
-    const toggleSnapBtn = document.getElementById("toggleSnap");
-    let snapOn = false;
+    const MAX_SCALE_DESKTOP = 1.9; // quality
+    const MAX_SCALE_MOBILE  = 1.35;
+    const VIS_THRESHOLD = 0.35;
 
-    toggleSnapBtn.addEventListener("click", () => {
-      snapOn = !snapOn;
-      document.body.classList.toggle("snap", snapOn);
-      toggleSnapBtn.textContent = `Scroll Snap: ${snapOn ? "On" : "Off"}`;
-    });
+    const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
 
-    function showLoading(show){
-      loading.classList.toggle("show", !!show);
-    }
-
-    function clearPages(){
-      pagesEl.innerHTML = "";
-    }
-
-    // IntersectionObserver for premium per-page reveal
+    // IntersectionObserver: reveal + update "Page X" pill
     const io = new IntersectionObserver((entries) => {
+      let best = null;
       for (const e of entries){
-        if (e.isIntersecting){
-          e.target.classList.add("is-visible");
-        }
+        if (!e.isIntersecting) continue;
+        if (!best || e.intersectionRatio > best.intersectionRatio) best = e;
+        e.target.classList.add("is-visible");
       }
-    }, { threshold: VISIBILITY_THRESHOLD });
+      if (best){
+        const p = best.target.getAttribute("data-page");
+        pagePill.textContent = `Page ${p}`;
+      }
+    }, { threshold: [0.15, 0.25, 0.35, 0.5, 0.7] });
 
-    function isMobile(){
-      return window.matchMedia("(max-width: 768px)").matches;
-    }
-
-    // Render a single page to canvas
     async function renderPage(pdf, pageNumber, scale){
       const page = await pdf.getPage(pageNumber);
-
       const viewport = page.getViewport({ scale });
 
-      const pageWrap = document.createElement("section");
-      pageWrap.className = "page";
+      const section = document.createElement("section");
+      section.className = "page";
+      section.setAttribute("data-page", String(pageNumber));
 
       const header = document.createElement("div");
       header.className = "page-top";
 
       const left = document.createElement("div");
       left.className = "page-label";
-      left.textContent = `Page ${pageNumber}`;
+      left.textContent = `Section ${pageNumber}`;
 
       const right = document.createElement("div");
       right.className = "page-meta";
@@ -406,10 +335,12 @@
       header.appendChild(left);
       header.appendChild(right);
 
+      const inner = document.createElement("div");
+      inner.className = "inner";
+
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d", { alpha: false });
 
-      // Use devicePixelRatio for crispness, without killing performance
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width  = Math.floor(viewport.width * dpr);
       canvas.height = Math.floor(viewport.height * dpr);
@@ -418,76 +349,122 @@
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      pageWrap.appendChild(header);
-      pageWrap.appendChild(canvas);
-      pagesEl.appendChild(pageWrap);
+      inner.appendChild(canvas);
+      section.appendChild(header);
+      section.appendChild(inner);
+      pagesEl.appendChild(section);
 
-      // Observe for scroll reveal
-      io.observe(pageWrap);
+      io.observe(section);
 
-      // Render
       await page.render({ canvasContext: ctx, viewport }).promise;
     }
 
-    // Render all pages
-    async function renderPDF(arrayBuffer, name){
-      showLoading(true);
-      clearPages();
+    async function buildWebsiteFromPDF(){
+      try{
+        const pdf = await pdfjsLib.getDocument(PDF_URL).promise;
+        const scale = isMobile() ? MAX_SCALE_MOBILE : MAX_SCALE_DESKTOP;
 
-      fileName.textContent = name || "Uploaded PDF";
-      docTitle.textContent = (name || "Gandharv Portfolio").replace(/\.pdf$/i, "");
-      docMeta.textContent  = "Scroll — each PDF page is now a web section.";
+        docMeta.innerHTML = `Hosting <b>mygd.pdf</b> as a website — ${pdf.numPages} sections.`;
 
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        for (let i = 1; i <= pdf.numPages; i++){
+          await renderPage(pdf, i, scale);
+          await new Promise(r => requestAnimationFrame(() => r()));
+        }
 
-      // scale based on device (balance quality & speed)
-      const scale = isMobile() ? MAX_SCALE_MOBILE : MAX_SCALE_DESKTOP;
+        loading.classList.add("hidden");
+        pagePill.textContent = "Page 1";
+      } catch (err){
+        // ✅ No errors shown. Premium holding state only.
+        loading.classList.add("hidden");
 
-      // Render sequentially to avoid jank spikes.
-      // If you want faster: we can do small concurrency (2-3 pages at a time).
-      for (let i = 1; i <= pdf.numPages; i++){
-        await renderPage(pdf, i, scale);
+        pagesEl.innerHTML = `
+          <section style="
+            margin:40px auto;
+            width:min(920px, 92vw);
+            border-radius:24px;
+            border:1px solid rgba(255,255,255,0.12);
+            background:
+              radial-gradient(700px 300px at 20% 15%, rgba(96,170,216,0.18), transparent 60%),
+              radial-gradient(700px 300px at 85% 0%, rgba(255,255,255,0.10), transparent 60%),
+              rgba(0,0,0,0.35);
+            box-shadow:0 28px 90px rgba(0,0,0,0.7);
+            padding:28px 26px 30px;
+            text-align:center;
+            color:rgba(255,255,255,0.88);
+          ">
+            <div style="
+              width:14px;
+              height:14px;
+              border-radius:999px;
+              margin:0 auto 14px;
+              background:#60AAD8;
+              box-shadow:0 0 22px rgba(96,170,216,0.7);
+            "></div>
 
-        // small yield so UI stays responsive
-        await new Promise(r => requestAnimationFrame(() => r()));
+            <h1 style="
+              margin:0 0 10px;
+              font-size:18px;
+              letter-spacing:.3px;
+              font-weight:900;
+            ">
+              Website Under Renovation
+            </h1>
+
+            <p style="
+              margin:0 auto;
+              max-width:52ch;
+              font-size:13px;
+              line-height:1.55;
+              color:rgba(255,255,255,0.70);
+            ">
+              We’re currently refining this experience to make it exceptional.
+              Please check back soon.
+            </p>
+
+            <div style="
+              margin-top:18px;
+              font-size:12px;
+              letter-spacing:.3px;
+              color:rgba(255,255,255,0.45);
+              font-weight:800;
+            ">
+              Gandharv Portfolio
+            </div>
+          </section>
+        `;
       }
-
-      showLoading(false);
-
-      // Scroll to first rendered page smoothly
-      const first = pagesEl.querySelector(".page");
-      if (first) first.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    pdfInput.addEventListener("change", async (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-
-      if (file.type !== "application/pdf"){
-        alert("Please upload a PDF file.");
-        return;
+    // Scroll-based “web motion”: mild parallax per section
+    function applyScrollMotion(){
+      const vh = window.innerHeight || 800;
+      const pages = document.querySelectorAll(".page");
+      for (const page of pages){
+        const rect = page.getBoundingClientRect();
+        const center = rect.top + rect.height/2;
+        const delta = (center - vh/2) / (vh/2);  // -1..1
+        const shift = Math.max(-18, Math.min(18, -delta * 14)); // px
+        page.style.setProperty("--parallax", `${shift}px`);
       }
+    }
 
-      fileName.textContent = file.name;
+    let ticking = false;
+    window.addEventListener("scroll", () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        applyScrollMotion();
+        ticking = false;
+      });
+    }, { passive: true });
 
-      const buf = await file.arrayBuffer();
-      await renderPDF(buf, file.name);
+    window.addEventListener("resize", () => {
+      applyScrollMotion();
     });
 
-    // Optional: allow drag-drop
-    window.addEventListener("dragover", (e) => { e.preventDefault(); });
-    window.addEventListener("drop", async (e) => {
-      e.preventDefault();
-      const file = e.dataTransfer?.files?.[0];
-      if (!file) return;
-      if (file.type !== "application/pdf"){
-        alert("Please drop a PDF file.");
-        return;
-      }
-      pdfInput.value = "";
-      fileName.textContent = file.name;
-      const buf = await file.arrayBuffer();
-      await renderPDF(buf, file.name);
+    // GO
+    buildWebsiteFromPDF().then(() => {
+      setTimeout(applyScrollMotion, 120);
     });
   </script>
 </body>
